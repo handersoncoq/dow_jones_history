@@ -1,0 +1,113 @@
+---
+title: "Data Processing & Analysis: Dow Jones Industrial Average Index"
+author: "Handerson Coq"
+date: '2022-06-05'
+output: html_document
+---
+
+### Context
+
+We are interested in understanding stock price movements over the years to see if we can identify some patterns.
+
+  * The dataset for this project is retrieved from this [Kaggle](https://www.kaggle.com/datasets/deeplytics/dow-stock-data?select=dow_historic_2000_2020) project. It has data from 2000 to 2020.
+
+  * We have already performed data cleaning with this dataset in SQL Server and are familiar with it. Therefore, steps such as verifying whether the data is complete, checking for nulls and missing values, will not be necessary here.
+
+  * The list of DJIA companies is retrieved from [Investopedia](https://www.investopedia.com/ask/answers/050115/what-does-dow-jones-industrial-average-measure.asp#:~:text=The%20Dow%20Jones%20Industrial%20Average%20(DJIA)%20measures%20the%20daily%20price,the%20transportation%20and%20utility%20industries.)
+
+
+### Data processing (cleaning)
+
+```{r libraries, echo=TRUE, message=FALSE, warning=FALSE}
+
+# Importing libraries
+
+library(tidyverse)
+library(dplyr)
+library(readxl)
+library(janitor)
+library(skimr)
+
+```
+
+```{r Stock Data, echo=TRUE, message=FALSE, warning=FALSE}
+
+# Importing DJIA stock data
+
+dow_jones_stocks <- read.csv("dow_historic_2000_2020.csv")
+
+head(dow_jones_stocks)
+
+```
+
+```{r DJIA Companies, echo=TRUE, message=FALSE, warning=FALSE}
+
+# Importing the DJIA company list
+
+dow_jones_companies <- read_xlsx("dow_jones_companies.xlsx")
+
+dow_jones_companies
+
+```
+
+```{r Stock Data Cleaning, echo=TRUE, message=FALSE, warning=FALSE}
+
+# Stock data processing & cleaning
+
+# Checking the datatypes and column names
+
+str(dow_jones_stocks)
+
+# The date column is in char, changing to date
+
+dow_jones_stocks$date <- as.Date(dow_jones_stocks$date)
+
+# Verifying that the date column is in correct format and has no duplicates
+
+str(dow_jones_stocks$date)
+
+length(unique(dow_jones_stocks$date)) # works if returns 5284
+
+```
+
+```{r DJIA Comp. Clean, echo=TRUE, message=FALSE, warning=FALSE}
+
+# DJIA Companies data processing & cleaning
+
+# Cleaning the column names and rename the symbol column to stock
+
+colnames(dow_jones_companies)
+
+dj_comp_clean <- clean_names(dow_jones_companies)
+  
+dj_comp_clean <- rename(dj_comp_clean, stock = symbol)
+
+```
+
+```{r Join data, echo=TRUE, message=FALSE, warning=FALSE}
+
+# Joining the stock dataset to the DJIA company dataset
+
+dj_stocks_clean <- dow_jones_stocks %>% 
+  inner_join(dj_comp_clean, by = "stock")
+
+# We will remove the year_added and industry_type from the new dataset
+
+dj_stocks <- dj_stocks_clean[,-c(12, 13)]
+
+head(dj_stocks)
+tail(dj_stocks)
+
+# Skim through the data
+
+skim_without_charts(dj_stocks)
+
+```
+
+### Exploratory Analysis
+
+```{r Join data, echo=TRUE, message=FALSE, warning=FALSE}
+
+
+```
+
