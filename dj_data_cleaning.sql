@@ -54,9 +54,9 @@ ORDER BY 1
 -- Checking for duplicates
 
 /* 
-There're supposed to be 21 years, 5 days a week
-for a total of 5*52*21 = 5460 
-So 5460 records or less (accounting for holidays) for each company
+There're supposed to be 21 years, 252 trading days a year
+for a total of 252*21 = 5292 
+So 5292 records or less for each company
 */
 
 SELECT COUNT(*)		--> Total number of record for all companies combined: 150503
