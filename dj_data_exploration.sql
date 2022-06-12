@@ -6,7 +6,7 @@
 --#############################################################################################
 
 -- The dow_historic dataset has stock records for all 30 companies in the DJIA index.
--- The adjusted closing price will be using instead of the simple closing price
+-- The adjusted closing price will be used instead of the simple closing price
 -- Some calculations performed: 
 --	Average & Max closing price per year, 
 --	Average traded volume per year, 
