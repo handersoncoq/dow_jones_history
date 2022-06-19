@@ -1,0 +1,65 @@
+---
+title: "Dow Jones Historical Data"
+author: "Handerson Coq"
+date: '2022-06-04'
+output: html_document
+---
+
+### Libraries
+
+```{r libraries, echo=TRUE, message=FALSE, warning=FALSE}
+
+library(tidyverse)
+library(dplyr)
+library(tidyr)
+
+install.packages("ggplot2")
+library(ggplot2)
+
+```
+
+
+### Data Importation
+
+This is historical data of the Dow from 2000 to 2020, imported from this [Kaggle](https://www.kaggle.com/datasets/deeplytics/dow-stock-data?select=dow_historic_2000_2020) notebook.
+
+```{r data importation, echo=TRUE, message=FALSE, warning=FALSE}
+
+dow_jones_stock <- read_csv("dow_historic_2000_2020.csv")
+
+head(dow_jones_stock)
+
+```
+
+### Average, Max and Min of individual stocks per year
+
+```{r}
+avg_max_min <- dow_jones_stock %>% 
+  select(stock, date, adj_close) %>%
+  group_by(stock, year = format(date, format = "%Y")) %>% 
+  summarise(avg = mean(adj_close), max_close = max(adj_close), min_close = min(adj_close))
+
+avg_max_min
+```
+
+
+### Visualization of 5 most prominent stock based on historical average
+
+```{r}
+# Selected stocks: AAPL, MSFT, CRM, DIS, V
+
+dow_jones_stock %>% 
+  filter(stock %in% c("AAPL", "MSFT", "CRM", "DIS", "V")) %>% 
+  group_by(stock, date) %>% 
+  ggplot(aes(date, adj_close, color = stock))+
+  geom_smooth()+
+  labs(title = "Historical price of Dow Jones Industrial Average stocks", subtitle = "(5 prominent stocks, 2000-2020)")+
+  xlab("Year") + ylab("Adjusted price")+
+
+# Some cleaning
+  
+  theme(panel.background = element_blank(), plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5))+
+guides(color = guide_legend(title = " "))
+
+```
+
