@@ -43,7 +43,7 @@ avg_max_min
 ```
 
 
-### Visualization of 5 most prominent stock based on historical average
+### Visualization of historcial price of 5 prominent stocks
 
 ```{r}
 # Selected stocks: AAPL, MSFT, CRM, DIS, V
